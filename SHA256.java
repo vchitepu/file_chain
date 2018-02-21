@@ -1,3 +1,4 @@
+
 //Cryptographic hash algorithm for hash generation. Using SHA-256 Message Digest Security
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

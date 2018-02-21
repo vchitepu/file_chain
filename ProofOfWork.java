@@ -1,4 +1,5 @@
 
+//Proof of Work for chain
 import java.security.DigestException;
 import java.security.NoSuchAlgorithmException;
 
@@ -11,7 +12,7 @@ public class ProofOfWork{
 		return Hash.generateStamp(NUM_BITS, source);
 	}
 
-	public boolean validate(String hash) throws NoSuchAlgorithmException, DigestException{
+	public static boolean validate(String hash) throws NoSuchAlgorithmException, DigestException{
 		return Hash.valid(NUM_BITS, hash);
 	}
 
