@@ -9,7 +9,7 @@ public class FileUtil {
 		long timestamp = System.currentTimeMillis();
 		String previous_hash = "0";
 		String hash = "0";
-		FileData data = new FileData("burokuru-shuriken", 42);
+		FileData data = new FileData("The_Initial_File");
 
 		return new File(index, timestamp, previous_hash, hash, data);
 	}
