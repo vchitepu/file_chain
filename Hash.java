@@ -19,24 +19,24 @@ public class Hash{
 	private static MessageDigest md = null;
 	private static int MAX_BITS = hashBuffer.length * Byte.SIZE;
 
-	private static Map<Character, String> charBinStringMap = new HashMap<Character, String>();
+	private static Map<Character, String> StringMap = new HashMap<Character, String>();
 	static{
-		charBinStringMap.put('0', "0000");
-		charBinStringMap.put('1', "0001");
-		charBinStringMap.put('2', "0010");
-		charBinStringMap.put('3', "0011");
-		charBinStringMap.put('4', "0100");
-		charBinStringMap.put('5', "0101");
-		charBinStringMap.put('6', "0110");
-		charBinStringMap.put('7', "0111");
-		charBinStringMap.put('8', "1000");
-		charBinStringMap.put('9', "1001");
-		charBinStringMap.put('A', "1010");
-		charBinStringMap.put('B', "1011");
-		charBinStringMap.put('C', "1100");
-		charBinStringMap.put('D', "1101");
-		charBinStringMap.put('E', "1110");
-		charBinStringMap.put('F', "1111");
+		StringMap.put('0', "0000");
+		StringMap.put('1', "0001");
+		StringMap.put('2', "0010");
+		StringMap.put('3', "0011");
+		StringMap.put('4', "0100");
+		StringMap.put('5', "0101");
+		StringMap.put('6', "0110");
+		StringMap.put('7', "0111");
+		StringMap.put('8', "1000");
+		StringMap.put('9', "1001");
+		StringMap.put('A', "1010");
+		StringMap.put('B', "1011");
+		StringMap.put('C', "1100");
+		StringMap.put('D', "1101");
+		StringMap.put('E', "1110");
+		StringMap.put('F', "1111");
 
 	}
 
@@ -135,7 +135,7 @@ public class Hash{
 	private static String toBinString(byte[] buff) {
 		StringBuilder tmp = new StringBuilder();
 		for (char c : toHexStr(buff).toCharArray())
-			tmp.append(charBinStringMap.get(c));
+			tmp.append(StringMap.get(c));
 
 		return tmp.toString();
 	}
