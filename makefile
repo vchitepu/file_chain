@@ -1,3 +1,6 @@
+# this is the makefile for the fileChain project.
+# DO NOT ALTER. If a new ,java file is added add it into the list below.
+
 JFLAGS = -g
 JC = javac
 .SUFFIXES: .java .class
