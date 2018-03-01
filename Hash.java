@@ -21,7 +21,7 @@ public class Hash{
 
 	private static Map<Character, String> StringMap = new HashMap<Character, String>();
 	static{
-		
+
 		StringMap.put('0', "0000");
 		StringMap.put('1', "0001");
 		StringMap.put('2', "0010");
