@@ -10,7 +10,6 @@ public class FileData{
 	public FileData(String data){
 		this.data = data;
 	}
-
 	public String getData(){
 		return data;
 	}
