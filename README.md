@@ -1,2 +1,2 @@
 
-Owned and Written by Cryptek Security
+Developed by Cryptek Security
