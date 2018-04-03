@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 
 public class Conversion{
 
-	public String FiletoHex(String file) throws IOException, FileNotFoundException{
+	public static String FiletoHex(String file) throws IOException, FileNotFoundException{
 
 		String content = "";
 		String command = "xxd " + file + " > tempHexFile.txt";
