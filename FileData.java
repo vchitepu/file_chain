@@ -1,7 +1,8 @@
 
 //Data that the file stores, used to generate hash
 //
-//Based off blockchain transaction. Replace with data parser.
+//Based off blockchain transaction. Replace with data parser
+
 public class FileData{
 
 	private String data;

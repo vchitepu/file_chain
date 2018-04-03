@@ -1,6 +1,9 @@
 
 //General utilities and file procedures
 import java.security.NoSuchAlgorithmException;
+import java.lang.Runtime;
+import java.util.*;
+
 
 public class FileUtil {
 	//genesis file 
@@ -20,5 +23,4 @@ public class FileUtil {
 		String content = index + previous_hash + timestamp + data.toString();
 		return SHA256.toSha256(content);
 	}
-
 }
