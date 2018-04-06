@@ -1,13 +1,10 @@
 # Cryptek Security
-# FileChain Data Storage
+# FileChain Secure Data Storage
 # Developed By: Vinay Chitepu
 
 # IMPLEMENTATION: Using a blockchain to store files. Files are stored using thier basis hex values so that they can be 
 # later reconstructed to from the hex values using xxd bash when they are needed. Every change(new save) will be treated 
 # as a seperate block in the chain.
-
-
-
 
 
 # Imported Modules
