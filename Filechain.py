@@ -2,9 +2,13 @@
 # FileChain Secure Data Storage
 # Developed By: Vinay Chitepu
 
-# IMPLEMENTATION: Using a blockchain to store files. Files are stored using thier basis hex values so that they can be 
+# IMPLEMENTATION: 
+# Using a blockchain to store files. Files are stored using thier basis hex values so that they can be 
 # later reconstructed to from the hex values using xxd bash when they are needed. Every change(new save) will be treated 
-# as a seperate block in the chain.
+# as a seperate block in the chain. This is a Beta for the FileChain system. This software essentially uses the blockchain ADT 
+# to securely store files and data. The every change is added in since there is a different hex value hence every version of the
+# previously saves file can be accessed. Since the blockchain is also immutable no changes can be made to it and it is
+# difficule to access files on it without local permissions. 
 
 
 # Imported Modules
@@ -15,12 +19,9 @@ import tkinter as tk
 from time import time
 from uuid import uuid4
 from tkinter import filedialog
-import warnings
-warnings.filterwarnings("ignore")
 
 
 #-----------------------------------------------------CLASS------------------------------------------------------#
-
 
 class Filechain:
 
@@ -124,8 +125,6 @@ class Filechain:
          return guess_hash[:4] == "0000"
 
 
-
-
 #---------------------------------------------------END-CLASS----------------------------------------------------#
 
 #Opening in terminal
@@ -150,8 +149,6 @@ def printOpening():
     print('')
 
 #-------------------------------------------------IMPLEMETATION--------------------------------------------------#
-
-
 
 
 # Opens local file browser and gets file path
