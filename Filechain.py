@@ -2,19 +2,34 @@
 # FileChain Data Storage
 # Developed By: Vinay Chitepu
 
+# IMPLEMENTATION: Using a blockchain to store files. Files are stored using thier basis hex values so that they can be 
+# later reconstructed to from the hex values using xxd bash when they are needed. Every change(new save) will be treated 
+# as a seperate block in the chain.
+
+
+
+
 
 # Imported Modules
 import hashlib
 import json
 import os
+import tkinter as tk
 from time import time
 from uuid import uuid4
+from tkinter import filedialog
+import warnings
+warnings.filterwarnings("ignore")
 
 
-class Filechain(object):
+#-----------------------------------------------------CLASS------------------------------------------------------#
+
+
+class Filechain:
 
 	#Initialize the chain
      def __init__(self):
+         self.files_in_chain = []
          self.file ={}
          self.chain = []
 
@@ -57,8 +72,8 @@ class Filechain(object):
          self.file = {
              'file_path': file_path,
              'data': data
-          }
-
+         }
+         self.files_in_chain.append(file_path)
          return self.last_block['index'] + 1
 
      #----------------------------------------------------------------------------------------------------#
@@ -108,15 +123,114 @@ class Filechain(object):
 
          guess = f'{last_proof}{proof}'.encode()
          guess_hash = hashlib.sha256(guess).hexdigest()
+
          return guess_hash[:4] == "0000"
 
-     #----------------------------------------------------------------------------------------------------#
-
-     # Main()
-     if __name__ == '__main__':
-     	print('UI Implementation Pending...')
 
 
-     #----------UserInterface----------#
+
+#---------------------------------------------------END-CLASS----------------------------------------------------#
+
+#Opening in terminal
+def printOpening():
+
+    print('    __________     ___     ___             __________     __________     ___        ___              ___              ___       ___       ___     ')
+    print('   |          |   |   |   |   |           |          |   |          |   |   |      |   |            /   \            |   |     |    \    |   |    ')
+    print('   |    ______|   |   |   |   |           |    ______|   |    ______|   |   |      |   |           /     \           |   |     |     \   |   |    ')
+    print('   |   |          |   |   |   |           |   |          |   |          |   |      |   |          /  __   \          |   |     |      \  |   |    ')
+    print('   |   |______    |   |   |   |           |   |______    |   |          |   |______|   |         /  /  \   \         |   |     |       \ |   |    ')
+    print('   |          |   |   |   |   |           |          |   |   |          |              |        /  /____\   \        |   |     |   |\   \|   |    ')
+    print('   |    ______|   |   |   |   |           |    ______|   |   |          |    ______    |       /             \       |   |     |   | \       |    ')
+    print('   |   |          |   |   |   |           |   |          |   |          |   |      |   |      /   _________   \      |   |     |   |  \      |    ')
+    print('   |   |          |   |   |   |_______    |   |______    |   |______    |   |      |   |     /   /         \   \     |   |     |   |   \     |    ')
+    print('   |   |          |   |   |           |   |          |   |          |   |   |      |   |    /   /           \   \    |   |     |   |    \    |    ')
+    print('   |___|          |___|   |___________|   |__________|   |__________|   |___|      |___|   /___/             \___\   |___|     |___|     \___|    ')
+    print('   The most secure file storage system')
+    print('   By: Crptek Security')
+    print('')
+    print('')
+
+#-------------------------------------------------IMPLEMETATION--------------------------------------------------#
+
+
+
+
+# Opens local file browser and gets file path
+def getFilePath():
+   root = tk.Tk()
+   root.withdraw()
+   file_path = filedialog.askopenfilename()
+   return file_path
+    
+
+# Main()
+def main():
+    #---------------UserInterface--------------#
+    printOpening()
+
+    print('Welcome to your File System')
+    print('')
+    f = Filechain() # Creates a new filechain
+
+    run = True
+    while run:
+        print("Menu: ")
+        print('')
+        print("1. Add File")
+        print("2. Show my files")
+        print("3. Quit")
+        option = input('Enter choice here: ')
+
+
+
+        if(option == '1'):
+            print('Please select file to add...')
+            #------------------------LocalFileBrowser-----------------------#
+            file_path = getFilePath()
+            if(file_path == ''):
+                print('')
+                print('File not added...')
+                print('')
+                continue
+            f.new_file(file_path)
+            proof = f.proof_of_work(f.last_block['proof'])
+            previous_hash = f.hash(f.last_block)
+            f.new_block(proof, previous_hash)
+        elif(option == '2'):
+            print('')
+            print('Chain: ')
+            print('')
+            if(f.files_in_chain == []):
+                print('     -none-')
+            for x in f.files_in_chain:
+                print('     ' + x)
+        elif(option == '3'):
+            run = False
+            print('')
+            print('Thank You!')
+            print('Quitting...')
+        else:
+            print("")
+            print('ENTER A VALID OPTION')
+
+
+        print('')
+ 
+
+if __name__ == '__main__': main()
+
+    
+
+
+
+
+
+
+             	
+    
+  
+
+
+     
 
 
