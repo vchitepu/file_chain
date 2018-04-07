@@ -11,7 +11,8 @@
 # difficule to access files on it without local permissions. 
 
 
-# Imported Modules
+#-----------------------------------------------------MODULES------------------------------------------------------#
+
 import hashlib
 import json
 import os
@@ -19,7 +20,6 @@ import tkinter as tk
 from time import time
 from uuid import uuid4
 from tkinter import filedialog
-
 
 #-----------------------------------------------------CLASS------------------------------------------------------#
 
@@ -71,7 +71,9 @@ class Filechain:
              'file_path': file_path,
              'data': data
          }
-         self.files_in_chain.append(file_path)
+         if(self.file['data'] != ''):
+             self.files_in_chain.append(self.file['file_path'])
+
          return self.last_block['index'] + 1
 
      #----------------------------------------------------------------------------------------------------#
@@ -174,26 +176,47 @@ def main():
         print('')
         print("1. Add File")
         print("2. Show my files")
-        print("3. Quit")
+        print("Q. Quit")
         option = input('Enter choice here: ')
 
 
 
         if(option == '1'):
-            print('Please select file to add...')
-
-            #------------LocalFileBrowserOpen-----------#
-
-            file_path = getFilePath()
-            if(file_path == ''):
+            runOption1 = True
+            while runOption1:
                 print('')
-                print('File not added...')
                 print('')
-                continue
-            f.new_file(file_path)
-            proof = f.proof_of_work(f.last_block['proof'])
-            previous_hash = f.hash(f.last_block)
-            f.new_block(proof, previous_hash)
+                print('ADD FILE')
+                print('')
+                print('')
+                print("Options:")
+                print('')
+                print("- 1. Open File Browser")
+                print("- Q. Back to main menu")
+                print('')
+                print('           OR')
+                print('')
+                print("- RECOMMENDED: Drag and drop the file into the terminal or type the filepath correctly below")
+                print('')
+                option1 = input('Enter choice or filepath here and press enter: ')
+                if(option1 == '1'):
+                    file_path = getFilePath()
+                    if(file_path == ''):
+                        print('')
+                        print('File not added...')
+                        print('')    
+                elif(option1 == 'q' or option1 == 'Q'):
+                    runOption1 = False
+                    continue
+                else:
+                    file_path = option1
+                    
+                print(file_path)
+                f.new_file(file_path)
+                proof = f.proof_of_work(f.last_block['proof'])
+                previous_hash = f.hash(f.last_block)
+                f.new_block(proof, previous_hash)
+
         elif(option == '2'):
             print('')
             print('Chain: ')
@@ -202,7 +225,7 @@ def main():
                 print('     -none-')
             for x in f.files_in_chain:
                 print('     ' + x)
-        elif(option == '3'):
+        elif(option == 'q' or option == 'Q' ):
             run = False
             print('')
             print('Thank You!')
@@ -213,8 +236,8 @@ def main():
 
 
         print('')
- 
-
+        print('')
+    
 if __name__ == '__main__': main()
 
     
