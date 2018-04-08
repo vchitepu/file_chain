@@ -1,17 +1,24 @@
 # Cryptek Security
 # FileChain Secure Data Storage
 # Developed By: Vinay Chitepu
+# Written in Python 3.6
 
 # IMPLEMENTATION: 
 # Using a blockchain to store files. Files are stored using thier basis hex values so that they can be 
 # later reconstructed to from the hex values using xxd bash when they are needed. Every change(new save) will be treated 
-# as a seperate block in the chain. This is a Beta for the FileChain system. This software essentially uses the blockchain ADT 
-# to securely store files and data. The every change is added in since there is a different hex value hence every version of the
-# previously saves file can be accessed. Since the blockchain is also immutable no changes can be made to it and it is
-# difficule to access files on it without local permissions. 
+# as a seperate block in the chain. This is a Beta for the FileChain system. 
+
+# DESIGN: 
+# This software essentially uses the blockchain ADT to securely store files and data. The every change is added in since 
+# there is a different hex value hence every version of the previously saves file can be accessed. Since the blockchain is also 
+# immutable no changes can be made to it and it is difficult to access files on it without local permissions. 
+
+# TO-DO:
+# Have a cloud system to store every clients individual chain. Once the program is started a new chain is created locally and 
+# copied over from the cloud. After the program is quit out of thr new changed made to the file are pushed back into the cloud.
 
 
-#-----------------------------------------------------MODULES------------------------------------------------------#
+#----------------------------------------------------MODULES-----------------------------------------------------#
 
 import hashlib
 import json
@@ -20,13 +27,15 @@ import tkinter as tk
 from time import time
 from uuid import uuid4
 from tkinter import filedialog
+from datetime import datetime
 
 #-----------------------------------------------------CLASS------------------------------------------------------#
 
 class Filechain:
 
-	#Initialize the chain
+	# Initialize the chain (happen during startup)
      def __init__(self):
+         self.timestamps = []
          self.files_in_chain = []
          self.file ={}
          self.chain = []
@@ -52,6 +61,8 @@ class Filechain:
 
          # Reset the current list of transactions
          self.file = {}
+         self.timestamps.append(block['timestamp'])
+
 
          self.chain.append(block)
          return block
@@ -73,7 +84,6 @@ class Filechain:
          }
          if(self.file['data'] != ''):
              self.files_in_chain.append(self.file['file_path'])
-
          return self.last_block['index'] + 1
 
      #----------------------------------------------------------------------------------------------------#
@@ -85,7 +95,24 @@ class Filechain:
 
      #----------------------------------------------------------------------------------------------------#
 
-   	# Creates a SHA-256 hash of a Block
+        # Returns the last block of the chain
+     def open_file(self, index, file_name):
+        
+     
+        data = self.chain[index]['file']['data']
+
+        textfile = open('hexfiletemp.txt', 'w')
+        textfile.write(data)
+        textfile.close()
+
+        os.system('xxd -r hexfiletemp.txt > temp')
+        os.system('open temp') 
+        os.system('rm hexfiletemp.txt')
+
+
+     #----------------------------------------------------------------------------------------------------#
+
+   	 # Creates a SHA-256 hash of a Block
      @staticmethod
      def hash(block):
          # :param block: <dict> Block
@@ -145,12 +172,16 @@ def printOpening():
     print(' |   |          |   |   |   |_______    |   |______    |   |______    |   |      |   |     /   /         \   \     |   |     |   |   \     |    ')
     print(' |   |          |   |   |           |   |          |   |          |   |   |      |   |    /   /           \   \    |   |     |   |    \    |    ')
     print(' |___|          |___|   |___________|   |__________|   |__________|   |___|      |___|   /___/             \___\   |___|     |___|     \___|    ')
-    print(' The most secure file storage system')
+    print(' Secure File Storage')
     print(' By: Crptek Security')
     print('')
+    print('Increase the size of terminal if image appears distored')
     print('')
 
-#-------------------------------------------------IMPLEMETATION--------------------------------------------------#
+#---------------------------------------------------------------------------------------------------IMPLEMETATION---------------------------------------------------------------------------------------------------#
+
+def timestamp2datetime(t):
+    return datetime.fromtimestamp(t).isoformat()
 
 
 # Opens local file browser and gets file path
@@ -162,8 +193,9 @@ def getFilePath():
     
 
 # Main()
-def main():
-    #---------------UserInterface--------------#
+def main(): # User Interface
+
+#-----------------------------------------------------------------------------------------------------MAIN_MENU-----------------------------------------------------------------------------------------------------#
     printOpening()
 
     print('Welcome to your File System')
@@ -172,19 +204,23 @@ def main():
 
     run = True
     while run:
+        print('--------------------------------------------------------------------------------------------------------')
+        print('')
         print("Menu: ")
         print('')
         print("1. Add File")
-        print("2. Show my files")
+        print("2. Show/Open files")
         print("Q. Quit")
+        print('')
         option = input('Enter choice here: ')
 
-
+#-----------------------------------------------------------------------------------------------------OPTION1-------------------------------------------------------------------------------------------------------#
 
         if(option == '1'):
             runOption1 = True
             while runOption1:
                 print('')
+                print('--------------------------------------------------------------------------------------------------------')
                 print('')
                 print('ADD FILE')
                 print('')
@@ -211,20 +247,53 @@ def main():
                 else:
                     file_path = option1
                     
-                print(file_path)
+                print('ADDED: ' + file_path + 'added successfully')
                 f.new_file(file_path)
                 proof = f.proof_of_work(f.last_block['proof'])
                 previous_hash = f.hash(f.last_block)
                 f.new_block(proof, previous_hash)
 
+#-----------------------------------------------------------------------------------------------------OPTION2-------------------------------------------------------------------------------------------------------#
+
         elif(option == '2'):
+            print('--------------------------------------------------------------------------------------------------------')
             print('')
             print('Chain: ')
             print('')
             if(f.files_in_chain == []):
                 print('     -none-')
-            for x in f.files_in_chain:
-                print('     ' + x)
+            count = 1
+            for x in f.chain:
+                if(x == f.chain[0]):
+                    continue
+                else:
+                    print(str(count) + '. Name: ' + str(x['file']['file_path']) + '      Date/Time of Save: ' + str(timestamp2datetime(x['timestamp'])))
+                    count+=1
+
+            run2 = True
+            while run2:
+                print('')
+                
+                print('')
+                print('--------------------------------------------------------------------------------------------------------')
+                print('')
+                print('Open Files')
+                print('')
+                print('NOTE: Once the file is opened you must save it manually if you wish to keep it')
+                print('')
+                option3 = input("Choose file number to open or type 'q' to go back to the main menu: ")
+                if(option3 == 'q' or option3 == 'Q'):
+                    run2 = False
+                    os.system('rm temp')
+                else:
+                    option3 = int(option3)
+                    block = f.chain[option3]
+                    file_name = block['file']['file_path']
+                    f.open_file(option3, file_name)
+
+#-------------------------------------------------------------------------------------------------------EXIT--------------------------------------------------------------------------------------------------------#
+
+
         elif(option == 'q' or option == 'Q' ):
             run = False
             print('')
@@ -238,7 +307,9 @@ def main():
         print('')
         print('')
     
-if __name__ == '__main__': main()
+if __name__ == '__main__': 
+    main()
+    os.system('clear')
 
     
 
