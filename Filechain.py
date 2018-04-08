@@ -285,11 +285,22 @@ def main(): # User Interface
                 if(option3 == 'q' or option3 == 'Q'):
                     run2 = False
                     os.system('rm temp')
+
                 else:
-                    option3 = int(option3)
-                    block = f.chain[option3]
-                    file_name = block['file']['file_path']
-                    f.open_file(option3, file_name)
+                    try:
+                        option3 = int(option3)
+                        if(int(option3) < len(f.chain)):
+                            block = f.chain[option3]
+                            file_name = block['file']['file_path']
+                            f.open_file(option3, file_name)
+                        else:
+                            print('')
+                            print('ENTER A VALID OPTION')
+
+                    except ValueError:
+                        print('')
+                        print("ENTER A VALID OPTION")
+
 
 #-------------------------------------------------------------------------------------------------------EXIT--------------------------------------------------------------------------------------------------------#
 
