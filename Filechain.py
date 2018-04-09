@@ -1,7 +1,7 @@
 
 # Cryptek Security LLC.
 # FileChain Secure Data Storage
-# Developed By: Vinay Chitepu
+# Created By: Vinay Chitepu
 # Written in Python 3.6
 
 # IMPLEMENTATION: 
@@ -15,8 +15,9 @@
 # immutable no changes can be made to it and it is difficult to access files on it without local permissions. 
 
 # TO-DO:
-# Have a cloud system to store every clients individual chain. Once the program is started a new chain is created locally and 
-# copied over from the cloud. After the program is quit out of thr new changed made to the file are pushed back into the cloud.
+# Create a database of chains for useres
+# Integrate a cloud system to store every clients individual chain. Once the program is started a new chain is created locally and 
+# copied over from the cloud. After the program is quit out of the new changes made to the chain are pushed back into the cloud.
 
 
 #----------------------------------------------------MODULES-----------------------------------------------------#
@@ -176,24 +177,46 @@ def printOpening():
     print('|   |          |   |   |           |   |          |   |          |   |   |      |   |    /   /           \   \    |   |     |   |    \    | ')
     print('|___|          |___|   |___________|   |__________|   |__________|   |___|      |___|   /___/             \___\   |___|     |___|     \___| ')
     print('Secure File Storage')
-    print('By: Crptek Security')
+    print('Cryptek Security')
     print('')
     print('NOTE: Increase the size of terminal if image appears distored')
     print('')
 
 #---------------------------------------------------------------------------------------------------IMPLEMETATION---------------------------------------------------------------------------------------------------#
 
-def timestamp2datetime(t):
-    return datetime.fromtimestamp(t).isoformat()
+# Formats timestamp into datatime 
+def timestamp2datetime(timestamp):
+    # :param timeestamp: <str> timstamp of each block
+    # :return: Formatted timestamp
+
+    return datetime.fromtimestamp(timestamp).isoformat()
 
 
 # Opens local file browser and gets file path
 def getFilePath():
+    # :return: filepath for selected file
    root = tk.Tk()
    root.withdraw()
    file_path = filedialog.askopenfilename()
    return file_path
+
+def pathcorrector_xxd(file_path):
+    arr = []
+    for x in file_path:
+        if(x == ' '):
+            arr.append('\\')
+        arr.append(x)
+    corrected = ''.join(arr)
+    return corrected
+
+def pathcorrector_os(file_path):
+    count = 0
+    for x in file_path:
+        if(x == "\\"):
+            count+=1
     
+    file_path = file_path.replace('\\', '', count)
+    return file_path
 
 # Main()
 def main(): # User Interface
@@ -248,8 +271,8 @@ def main(): # User Interface
                         print('')
                         print('--------------------------------------------------------------------------------------------------------')
                         print('')
-                        print('ADDED: ' + file_path + 'added successfully')
-                        f.new_file(file_path)
+                        print('ADDED: ' + file_path + ' added successfully')
+                        f.new_file(pathcorrector_xxd(file_path))
                         proof = f.proof_of_work(f.last_block['proof'])
                         previous_hash = f.hash(f.last_block)
                         f.new_block(proof, previous_hash)
@@ -258,12 +281,12 @@ def main(): # User Interface
                     runOption1 = False
                 else:
                     option1 = option1[:len(option1)-1]
-                    if(os.path.exists(option1)):
+                    if(os.path.exists(pathcorrector_os(option1))):
                         file_path = option1
                         print('')
                         print('--------------------------------------------------------------------------------------------------------')
                         print('')
-                        print('ADDED: ' + file_path + 'added successfully')
+                        print('ADDED: ' + file_path + ' added successfully')
                         f.new_file(file_path)
                         proof = f.proof_of_work(f.last_block['proof'])
                         previous_hash = f.hash(f.last_block)
