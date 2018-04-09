@@ -201,7 +201,8 @@ def getFilePath():
 
 # Corrects path to be used for xxd command
 def pathcorrector_xxd(file_path):
-    # :param file_path: <str>
+    # :param file_path: <str> filepath for the file
+    # :return: Formatted file for xxd bash
     arr = []
     for x in file_path:
         if(x == ' '):
@@ -212,6 +213,8 @@ def pathcorrector_xxd(file_path):
 
 # Corrects path to be used with os module
 def pathcorrector_os(file_path):
+    # :param file_path: <str> filepath for the file
+    # :return: Formatted file 
     count = 0
     for x in file_path:
         if(x == "\\"):
