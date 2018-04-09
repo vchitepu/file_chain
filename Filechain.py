@@ -109,7 +109,7 @@ class Filechain:
         textfile.close()
 
         os.system('xxd -r hexfiletemp.txt > temporary')
-        os.system('open temp') 
+        os.system('open temporary') 
         os.system('rm hexfiletemp.txt')
 
 
@@ -199,7 +199,9 @@ def getFilePath():
    file_path = filedialog.askopenfilename()
    return file_path
 
+# Corrects path to be used for xxd command
 def pathcorrector_xxd(file_path):
+    # :param file_path: <str>
     arr = []
     for x in file_path:
         if(x == ' '):
@@ -208,6 +210,7 @@ def pathcorrector_xxd(file_path):
     corrected = ''.join(arr)
     return corrected
 
+# Corrects path to be used with os module
 def pathcorrector_os(file_path):
     count = 0
     for x in file_path:
@@ -326,7 +329,7 @@ def main(): # User Interface
                 option3 = input("Choose file number to open or type 'q' to go back to the main menu: ")
                 if(option3 == 'q' or option3 == 'Q'):
                     run2 = False
-                    os.system('rm temp')
+                    os.system('rm temporary')
 
                 else:
                     try:
