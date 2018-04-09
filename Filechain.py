@@ -1,3 +1,4 @@
+
 # Cryptek Security LLC.
 # FileChain Secure Data Storage
 # Developed By: Vinay Chitepu
@@ -23,6 +24,7 @@
 import hashlib
 import json
 import os
+import os.path
 import tkinter as tk
 from time import time
 from uuid import uuid4
@@ -33,7 +35,7 @@ from datetime import datetime
 
 class Filechain:
 
-	# Initialize the chain (happen during startup)
+	 # Initialize the chain (happen during startup)
      def __init__(self):
          self.timestamps = []
          self.files_in_chain = []
@@ -95,10 +97,11 @@ class Filechain:
 
      #----------------------------------------------------------------------------------------------------#
 
-        # Returns the last block of the chain
+     # Opens a file using the hexdump
      def open_file(self, index, file_name):
-        
-     
+        # :param index: <int> Index of block on the chain where the hexdump in located
+        # :param file_name: <str> The name of the file that we are going to open
+
         data = self.chain[index]['file']['data']
 
         textfile = open('hexfiletemp.txt', 'w')
@@ -116,7 +119,7 @@ class Filechain:
      @staticmethod
      def hash(block):
          # :param block: <dict> Block
-         # :return: <str>
+         # :return: <str> hash for the block
         
          # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
          block_str = json.dumps(block, sort_keys=True).encode()
@@ -161,21 +164,21 @@ def printOpening():
 
     print('')
     print('')
-    print('  __________     ___     ___             __________     __________     ___        ___              ___              ___       ___       ___     ')
-    print(' |          |   |   |   |   |           |          |   |          |   |   |      |   |            /   \            |   |     |    \    |   |    ')
-    print(' |    ______|   |   |   |   |           |    ______|   |    ______|   |   |      |   |           /     \           |   |     |     \   |   |    ')
-    print(' |   |          |   |   |   |           |   |          |   |          |   |      |   |          /  __   \          |   |     |      \  |   |    ')
-    print(' |   |______    |   |   |   |           |   |______    |   |          |   |______|   |         /  /  \   \         |   |     |       \ |   |    ')
-    print(' |          |   |   |   |   |           |          |   |   |          |              |        /  /____\   \        |   |     |   |\   \|   |    ')
-    print(' |    ______|   |   |   |   |           |    ______|   |   |          |    ______    |       /             \       |   |     |   | \       |    ')
-    print(' |   |          |   |   |   |           |   |          |   |          |   |      |   |      /   _________   \      |   |     |   |  \      |    ')
-    print(' |   |          |   |   |   |_______    |   |______    |   |______    |   |      |   |     /   /         \   \     |   |     |   |   \     |    ')
-    print(' |   |          |   |   |           |   |          |   |          |   |   |      |   |    /   /           \   \    |   |     |   |    \    |    ')
-    print(' |___|          |___|   |___________|   |__________|   |__________|   |___|      |___|   /___/             \___\   |___|     |___|     \___|    ')
-    print(' Secure File Storage')
-    print(' By: Crptek Security')
+    print(' __________     ___     ___             __________     __________     ___        ___              ___              ___       ___       ___  ')
+    print('|          |   |   |   |   |           |          |   |          |   |   |      |   |            /   \            |   |     |    \    |   | ')
+    print('|    ______|   |   |   |   |           |    ______|   |    ______|   |   |      |   |           /     \           |   |     |     \   |   | ')
+    print('|   |          |   |   |   |           |   |          |   |          |   |      |   |          /  __   \          |   |     |      \  |   | ')
+    print('|   |______    |   |   |   |           |   |______    |   |          |   |______|   |         /  /  \   \         |   |     |       \ |   | ')
+    print('|          |   |   |   |   |           |          |   |   |          |              |        /  /____\   \        |   |     |   |\   \|   | ')
+    print('|    ______|   |   |   |   |           |    ______|   |   |          |    ______    |       /             \       |   |     |   | \       | ')
+    print('|   |          |   |   |   |           |   |          |   |          |   |      |   |      /   _________   \      |   |     |   |  \      | ')
+    print('|   |          |   |   |   |_______    |   |______    |   |______    |   |      |   |     /   /         \   \     |   |     |   |   \     | ')
+    print('|   |          |   |   |           |   |          |   |          |   |   |      |   |    /   /           \   \    |   |     |   |    \    | ')
+    print('|___|          |___|   |___________|   |__________|   |__________|   |___|      |___|   /___/             \___\   |___|     |___|     \___| ')
+    print('Secure File Storage')
+    print('By: Crptek Security')
     print('')
-    print('Increase the size of terminal if image appears distored')
+    print('NOTE: Increase the size of terminal if image appears distored')
     print('')
 
 #---------------------------------------------------------------------------------------------------IMPLEMETATION---------------------------------------------------------------------------------------------------#
@@ -214,7 +217,7 @@ def main(): # User Interface
         print('')
         option = input('Enter choice here: ')
 
-#-----------------------------------------------------------------------------------------------------OPTION1-------------------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------------------------------ADDFILE-------------------------------------------------------------------------------------------------------#
 
         if(option == '1'):
             runOption1 = True
@@ -239,21 +242,38 @@ def main(): # User Interface
                     file_path = getFilePath()
                     if(file_path == ''):
                         print('')
-                        print('File not added...')
+                        print('Add cancelled')
                         print('')    
+                    else:
+                        print('')
+                        print('--------------------------------------------------------------------------------------------------------')
+                        print('')
+                        print('ADDED: ' + file_path + 'added successfully')
+                        f.new_file(file_path)
+                        proof = f.proof_of_work(f.last_block['proof'])
+                        previous_hash = f.hash(f.last_block)
+                        f.new_block(proof, previous_hash)
+
                 elif(option1 == 'q' or option1 == 'Q'):
                     runOption1 = False
-                    continue
                 else:
-                    file_path = option1
-                    
-                print('ADDED: ' + file_path + 'added successfully')
-                f.new_file(file_path)
-                proof = f.proof_of_work(f.last_block['proof'])
-                previous_hash = f.hash(f.last_block)
-                f.new_block(proof, previous_hash)
+                    option1 = option1[:len(option1)-1]
+                    if(os.path.exists(option1)):
+                        file_path = option1
+                        print('')
+                        print('--------------------------------------------------------------------------------------------------------')
+                        print('')
+                        print('ADDED: ' + file_path + 'added successfully')
+                        f.new_file(file_path)
+                        proof = f.proof_of_work(f.last_block['proof'])
+                        previous_hash = f.hash(f.last_block)
+                        f.new_block(proof, previous_hash)
+                    else:
+                        print('')
+                        print("File does not exist")
 
-#-----------------------------------------------------------------------------------------------------OPTION2-------------------------------------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------------------------------OPENFILE-------------------------------------------------------------------------------------------------------#
 
         elif(option == '2'):
             print('--------------------------------------------------------------------------------------------------------')
@@ -321,7 +341,10 @@ def main(): # User Interface
 if __name__ == '__main__': 
     main()
     os.system('clear')
-
+    
+    print('Thank You!')
+    print('Quitting...')
+    print('')
     
 
 
