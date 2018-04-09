@@ -1,4 +1,3 @@
-
 # Cryptek Security LLC.
 # FileChain Secure Data Storage
 # Created By: Vinay Chitepu
@@ -82,7 +81,7 @@ class Filechain:
          data = os.popen(command).read()
 
          self.file = {
-             'file_path': file_path,
+             'file_path': pathcorrector_os(file_path),
              'data': data
          }
          if(self.file['data'] != ''):
@@ -109,7 +108,7 @@ class Filechain:
         textfile.write(data)
         textfile.close()
 
-        os.system('xxd -r hexfiletemp.txt > temp')
+        os.system('xxd -r hexfiletemp.txt > temporary')
         os.system('open temp') 
         os.system('rm hexfiletemp.txt')
 
@@ -286,7 +285,7 @@ def main(): # User Interface
                         print('')
                         print('--------------------------------------------------------------------------------------------------------')
                         print('')
-                        print('ADDED: ' + file_path + ' added successfully')
+                        print('ADDED: ' + pathcorrector_os(file_path) + ' added successfully')
                         f.new_file(file_path)
                         proof = f.proof_of_work(f.last_block['proof'])
                         previous_hash = f.hash(f.last_block)
